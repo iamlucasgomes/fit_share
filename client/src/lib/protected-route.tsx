@@ -1,6 +1,6 @@
-import { useAuth } from "@/hooks/use-auth";
-import { Loader2 } from "lucide-react";
-import { Redirect, Route } from "wouter";
+import { useAuth } from '@/hooks/use-auth';
+import { Loader2 } from 'lucide-react';
+import { Redirect, Route } from 'wouter';
 
 export function ProtectedRoute({
   path,
@@ -29,5 +29,10 @@ export function ProtectedRoute({
     );
   }
 
-  return <Route path={path} component={Component} />;
+  return (
+    <Route
+      path={path}
+      component={Component}
+    />
+  );
 }

@@ -1,6 +1,6 @@
-import { SiteHeader } from "@/components/site-header";
-import { PhotoFeed } from "@/components/photo-feed";
-import { UploadDialog } from "@/components/upload-dialog";
+import { SiteHeader } from '@/components/site-header';
+import { PhotoFeed } from '@/components/photo-feed';
+import { UploadDialog } from '@/components/upload-dialog';
 
 export default function HomePage() {
   return (

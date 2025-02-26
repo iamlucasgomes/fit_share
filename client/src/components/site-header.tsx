@@ -1,16 +1,16 @@
-import { Link } from "wouter";
-import { useAuth } from "@/hooks/use-auth";
-import { Button } from "@/components/ui/button";
+import { Link } from 'wouter';
+import { useAuth } from '@/hooks/use-auth';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LogOut, User } from "lucide-react";
-import { NotificationList } from "./notification-list";
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { LogOut, User } from 'lucide-react';
+import { NotificationList } from './notification-list';
 
 export function SiteHeader() {
   const { user, logoutMutation } = useAuth();
@@ -19,7 +19,10 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
         <div className="mr-4 flex">
-          <Link href="/" className="flex items-center space-x-2">
+          <Link
+            href="/"
+            className="flex items-center space-x-2"
+          >
             <span className="font-bold text-xl">FitShare</span>
           </Link>
         </div>
@@ -30,7 +33,10 @@ export function SiteHeader() {
                 <NotificationList />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 rounded-full"
+                    >
                       <Avatar className="h-8 w-8">
                         {user.avatarUrl ? (
                           <img
@@ -59,7 +65,10 @@ export function SiteHeader() {
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href={`/profile/${user.id}`} className="cursor-pointer">
+                      <Link
+                        href={`/profile/${user.id}`}
+                        className="cursor-pointer"
+                      >
                         <User className="mr-2 h-4 w-4" />
                         <span>Profile</span>
                       </Link>

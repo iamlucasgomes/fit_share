@@ -1,30 +1,26 @@
-import { useAuth } from "@/hooks/use-auth";
-import { useState, useRef, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Photo, User } from "@shared/schema";
-import { useParams } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
-import { SiteHeader } from "@/components/site-header";
-import { Loader2 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { UserListDialog } from "@/components/user-list-dialog";
+import {useAuth} from '@/hooks/use-auth';
+import {useEffect, useRef, useState} from 'react';
+import {useQuery} from '@tanstack/react-query';
+import {Photo, User} from '@shared/schema';
+import {useParams} from 'wouter';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {Textarea} from '@/components/ui/textarea';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {apiRequest, queryClient} from '@/lib/queryClient';
+import {useToast} from '@/hooks/use-toast';
+import {SiteHeader} from '@/components/site-header';
+import {Loader2} from 'lucide-react';
+import {Dialog, DialogContent, DialogTrigger} from '@/components/ui/dialog';
+import {UserListDialog} from '@/components/user-list-dialog';
 
 export default function ProfilePage() {
   const { id } = useParams<{ id: string }>();
   const { user: currentUser } = useAuth();
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
-  const [bio, setBio] = useState("");
-  const [displayName, setDisplayName] = useState("");
+  const [bio, setBio] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,14 +35,14 @@ export default function ProfilePage() {
 
   const { data: isFollowing } = useQuery<{ isFollowing: boolean }>({
     queryKey: [`/api/users/${id}/following`],
-    enabled: !!currentUser && currentUser.id !== parseInt(id),
+    enabled: !!currentUser && currentUser.id !== id,
   });
 
   // Update bio and displayName state when user data is loaded
   useEffect(() => {
     if (user) {
-      setBio(user.bio || "");
-      setDisplayName(user.displayName || "");
+      setBio(user.bio || '');
+      setDisplayName(user.displayName || '');
     }
   }, [user]);
 
@@ -54,11 +50,11 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
+    if (!file.type.startsWith('image/')) {
       toast({
-        title: "Invalid file type",
-        description: "Please select an image file",
-        variant: "destructive",
+        title: 'Invalid file type',
+        description: 'Please select an image file',
+        variant: 'destructive',
       });
       return;
     }
@@ -66,25 +62,25 @@ export default function ProfilePage() {
     try {
       setIsUploading(true);
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
 
-      const response = await fetch("/api/upload", {
-        method: "POST",
+      const response = await fetch('/api/upload', {
+        method: 'POST',
         body: formData,
-        credentials: "include",
+        credentials: 'include',
       });
 
       if (!response.ok) {
-        throw new Error("Failed to upload image");
+        throw new Error('Failed to upload image');
       }
 
       const data = await response.json();
       await handleUpdateProfile(data.url);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to upload profile picture",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to upload profile picture',
+        variant: 'destructive',
       });
     } finally {
       setIsUploading(false);
@@ -93,7 +89,7 @@ export default function ProfilePage() {
 
   const handleUpdateProfile = async (newAvatarUrl?: string) => {
     try {
-      await apiRequest("PATCH", "/api/user/profile", {
+      await apiRequest('PATCH', '/api/user/profile', {
         bio,
         displayName,
         avatarUrl: newAvatarUrl || user?.avatarUrl,
@@ -102,42 +98,46 @@ export default function ProfilePage() {
       queryClient.invalidateQueries({ queryKey: [`/api/users/${id}`] });
       setIsEditing(false);
       toast({
-        title: "Success",
-        description: "Profile updated successfully",
+        title: 'Success',
+        description: 'Profile updated successfully',
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to update profile",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to update profile',
+        variant: 'destructive',
       });
     }
   };
 
   const handleFollow = async () => {
     try {
-      await apiRequest("POST", `/api/users/${id}/follow`);
-      queryClient.invalidateQueries({ queryKey: [`/api/users/${id}/following`] });
+      await apiRequest('POST', `/api/users/${id}/follow`);
+      queryClient.invalidateQueries({
+        queryKey: [`/api/users/${id}/following`],
+      });
       queryClient.invalidateQueries({ queryKey: [`/api/users/${id}`] });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to follow user",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to follow user',
+        variant: 'destructive',
       });
     }
   };
 
   const handleUnfollow = async () => {
     try {
-      await apiRequest("POST", `/api/users/${id}/unfollow`);
-      queryClient.invalidateQueries({ queryKey: [`/api/users/${id}/following`] });
+      await apiRequest('POST', `/api/users/${id}/unfollow`);
+      queryClient.invalidateQueries({
+        queryKey: [`/api/users/${id}/following`],
+      });
       queryClient.invalidateQueries({ queryKey: [`/api/users/${id}`] });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to unfollow user",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to unfollow user',
+        variant: 'destructive',
       });
     }
   };
@@ -148,7 +148,7 @@ export default function ProfilePage() {
 
   if (!user) return null;
 
-  const isOwnProfile = currentUser?.id === parseInt(id);
+  const isOwnProfile = currentUser?.id === id;
 
   return (
     <div className="min-h-screen bg-background">
@@ -162,7 +162,7 @@ export default function ProfilePage() {
             <div className="flex items-center gap-6">
               <div className="relative">
                 <img
-                  src={user.avatarUrl || "https://via.placeholder.com/150"}
+                  src={user.avatarUrl || 'https://via.placeholder.com/150'}
                   alt={user.displayName || user.username}
                   className="w-32 h-32 rounded-full object-cover"
                 />
@@ -199,7 +199,7 @@ export default function ProfilePage() {
                       <label className="block text-sm font-medium mb-1">Display Name</label>
                       <Input
                         value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
+                        onChange={e => setDisplayName(e.target.value)}
                         placeholder="Enter display name"
                       />
                     </div>
@@ -207,24 +207,30 @@ export default function ProfilePage() {
                       <label className="block text-sm font-medium mb-1">Bio</label>
                       <Textarea
                         value={bio}
-                        onChange={(e) => setBio(e.target.value)}
+                        onChange={e => setBio(e.target.value)}
                         placeholder="Tell us about yourself"
                       />
                     </div>
                     <div className="flex gap-2">
                       <Button onClick={() => handleUpdateProfile()}>Save</Button>
-                      <Button variant="outline" onClick={() => setIsEditing(false)}>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsEditing(false)}
+                      >
                         Cancel
                       </Button>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <p className="text-muted-foreground mb-4">{user.bio || "No bio yet"}</p>
+                    <p className="text-muted-foreground mb-4">{user.bio || 'No bio yet'}</p>
                     <p className="text-sm text-muted-foreground mb-4">
                       <UserListDialog
                         trigger={
-                          <Button variant="link" className="p-0 h-auto font-normal">
+                          <Button
+                            variant="link"
+                            className="p-0 h-auto font-normal"
+                          >
                             {user.followerCount} followers
                           </Button>
                         }
@@ -235,10 +241,8 @@ export default function ProfilePage() {
                     {isOwnProfile ? (
                       <Button onClick={() => setIsEditing(true)}>Edit Profile</Button>
                     ) : (
-                      <Button
-                        onClick={isFollowing?.isFollowing ? handleUnfollow : handleFollow}
-                      >
-                        {isFollowing?.isFollowing ? "Unfollow" : "Follow"}
+                      <Button onClick={isFollowing?.isFollowing ? handleUnfollow : handleFollow}>
+                        {isFollowing?.isFollowing ? 'Unfollow' : 'Follow'}
                       </Button>
                     )}
                   </>
@@ -251,7 +255,7 @@ export default function ProfilePage() {
         <h3 className="text-2xl font-bold mt-8 mb-6">Photos</h3>
         {photos && photos.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {photos.map((photo) => (
+            {photos.map(photo => (
               <Dialog key={photo.id}>
                 <DialogTrigger asChild>
                   <Card
@@ -261,7 +265,7 @@ export default function ProfilePage() {
                     <CardContent className="p-0">
                       <img
                         src={photo.imageUrl}
-                        alt={photo.caption || "Fitness progress"}
+                        alt={photo.caption || 'Fitness progress'}
                         className="w-full aspect-square object-cover"
                       />
                     </CardContent>
@@ -286,13 +290,11 @@ function PhotoDetail({ photo }: { photo: Photo }) {
     <div className="grid md:grid-cols-2 gap-4">
       <img
         src={photo.imageUrl}
-        alt={photo.caption || "Fitness progress"}
+        alt={photo.caption || 'Fitness progress'}
         className="w-full aspect-square object-cover rounded-lg"
       />
       <div className="space-y-4">
-        {photo.caption && (
-          <p className="text-lg">{photo.caption}</p>
-        )}
+        {photo.caption && <p className="text-lg">{photo.caption}</p>}
         <p className="text-sm text-muted-foreground">
           {photo.likeCount || 0} likes • {photo.commentCount || 0} comments
         </p>

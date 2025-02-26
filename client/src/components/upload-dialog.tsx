@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
+import { useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -8,18 +8,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Upload, Image as ImageIcon, Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Image as ImageIcon, Loader2, Upload } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest, queryClient } from '@/lib/queryClient';
 
 export function UploadDialog() {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  const [caption, setCaption] = useState("");
+  const [caption, setCaption] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -27,11 +27,11 @@ export function UploadDialog() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      if (!selectedFile.type.startsWith("image/")) {
+      if (!selectedFile.type.startsWith('image/')) {
         toast({
-          title: "Invalid file type",
-          description: "Please select an image file.",
-          variant: "destructive",
+          title: 'Invalid file type',
+          description: 'Please select an image file.',
+          variant: 'destructive',
         });
         return;
       }
@@ -41,16 +41,16 @@ export function UploadDialog() {
 
   const uploadToServer = async (file: File): Promise<string> => {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
 
-    const response = await fetch("/api/upload", {
-      method: "POST",
+    const response = await fetch('/api/upload', {
+      method: 'POST',
       body: formData,
-      credentials: "include",
+      credentials: 'include',
     });
 
     if (!response.ok) {
-      throw new Error("Failed to upload image");
+      throw new Error('Failed to upload image');
     }
 
     const data = await response.json();
@@ -61,9 +61,9 @@ export function UploadDialog() {
     e.preventDefault();
     if (!file) {
       toast({
-        title: "No file selected",
-        description: "Please select an image to upload",
-        variant: "destructive",
+        title: 'No file selected',
+        description: 'Please select an image to upload',
+        variant: 'destructive',
       });
       return;
     }
@@ -71,21 +71,21 @@ export function UploadDialog() {
     try {
       setIsUploading(true);
       const imageUrl = await uploadToServer(file);
-      await apiRequest("POST", "/api/photos", { imageUrl, caption });
+      await apiRequest('POST', '/api/photos', { imageUrl, caption });
 
-      queryClient.invalidateQueries({ queryKey: ["/api/photos"] });
+      queryClient.invalidateQueries({ queryKey: ['/api/photos'] });
       setOpen(false);
       setFile(null);
-      setCaption("");
+      setCaption('');
       toast({
-        title: "Success",
-        description: "Photo uploaded successfully",
+        title: 'Success',
+        description: 'Photo uploaded successfully',
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to upload photo",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to upload photo',
+        variant: 'destructive',
       });
     } finally {
       setIsUploading(false);
@@ -93,19 +93,20 @@ export function UploadDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DialogTrigger asChild>
         <Button>
           <Upload className="mr-2 h-4 w-4" />
-          Upload Progress
+          Novo post
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Upload Progress Photo</DialogTitle>
-          <DialogDescription>
-            Share your fitness journey with the community
-          </DialogDescription>
+          <DialogDescription>Share your fitness journey with the community</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
@@ -136,20 +137,23 @@ export function UploadDialog() {
               <Textarea
                 id="caption"
                 value={caption}
-                onChange={(e) => setCaption(e.target.value)}
+                onChange={e => setCaption(e.target.value)}
                 placeholder="Add a caption to your photo"
               />
             </div>
           </div>
           <DialogFooter className="mt-4">
-            <Button type="submit" disabled={isUploading}>
+            <Button
+              type="submit"
+              disabled={isUploading}
+            >
               {isUploading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Uploading...
                 </>
               ) : (
-                "Upload"
+                'Upload'
               )}
             </Button>
           </DialogFooter>
