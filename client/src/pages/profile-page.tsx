@@ -1,18 +1,18 @@
-import {useAuth} from '@/hooks/use-auth';
-import {useEffect, useRef, useState} from 'react';
-import {useQuery} from '@tanstack/react-query';
-import {Photo, User} from '@shared/schema';
-import {useParams} from 'wouter';
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
-import {Textarea} from '@/components/ui/textarea';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {apiRequest, queryClient} from '@/lib/queryClient';
-import {useToast} from '@/hooks/use-toast';
-import {SiteHeader} from '@/components/site-header';
-import {Loader2} from 'lucide-react';
-import {Dialog, DialogContent, DialogTrigger} from '@/components/ui/dialog';
-import {UserListDialog} from '@/components/user-list-dialog';
+import { useAuth } from '@/hooks/use-auth';
+import { useEffect, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Photo, User } from '@shared/schema';
+import { useParams } from 'wouter';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { apiRequest, queryClient } from '@/lib/queryClient';
+import { useToast } from '@/hooks/use-toast';
+import { SiteHeader } from '@/components/site-header';
+import { Loader2 } from 'lucide-react';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { UserListDialog } from '@/components/user-list-dialog';
 
 export default function ProfilePage() {
   const { id } = useParams<{ id: string }>();
